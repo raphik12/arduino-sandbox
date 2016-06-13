@@ -1,0 +1,6 @@
+*** 13/06/2016: Copie de C:\GitHub\ArduinoProject\ vers C:\GitHub\arduino-sandbox\ ***
+12:57:40 Copie C:\GitHub\ArduinoProject\Temp\UnityLockfile : Le processus ne peut pas accéder au fichier car ce fichier est utilisé par un autre processus
+12:58:05 Copie C:\GitHub\ArduinoProject\Temp\UnityLockfile : Le chemin d’accès spécifié est introuvable
+12:58:06 Copie C:\GitHub\ArduinoProject\Temp\UnityLockfile : Le chemin d’accès spécifié est introuvable
+12:58:07 Copie C:\GitHub\ArduinoProject\Temp\UnityLockfile : Le chemin d’accès spécifié est introuvable
+12:58:07 Copie C:\GitHub\ArduinoProject\Temp\UnityLockfile : Le chemin d’accès spécifié est introuvable
