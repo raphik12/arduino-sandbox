@@ -10,6 +10,9 @@ public class CanonControl : MonoBehaviour {
     //Quaternion startRotation;
     public float smooth = 2.0F;
     float convert = 360f/1024f;
+
+    // mac /dev/cu.usbmodem1421
+    // pc COM
     public string port;
 
     void Awake()
@@ -39,7 +42,7 @@ public class CanonControl : MonoBehaviour {
             
             int sensor1 = Int32.Parse(splitted[0]);
             int sensor2 = Int32.Parse(splitted[1]);
-            Debug.LogError(sensor1+","+sensor2);
+            //Debug.LogError(sensor1+","+sensor2);
             
             /*
             float newX = startPosition.x+outputInt/100f;
@@ -60,11 +63,12 @@ public class CanonControl : MonoBehaviour {
         stream.ReadTimeout = timeout;        
         try {
             readLine = stream.ReadLine();
-            stream.DiscardInBuffer();
+            //stream.DiscardInBuffer();
+            //Debug.Log(readLine);
             return readLine;
         }
         catch (Exception e) {
-            stream.DiscardInBuffer();
+            //stream.DiscardInBuffer();
             return null;
         }
         
