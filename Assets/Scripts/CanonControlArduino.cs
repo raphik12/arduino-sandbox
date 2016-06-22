@@ -10,6 +10,9 @@ public class CanonControlArduino : MonoBehaviour {
     //Quaternion startRotation;
     public float smooth = 2.0F;
     float convert = 360f/1024f;
+
+    // mac /dev/cu.usbmodem1421
+    // pc COM
     public string port;
 
     void Awake()
@@ -39,7 +42,7 @@ public class CanonControlArduino : MonoBehaviour {
             
             int sensor1 = Int32.Parse(splitted[0]);
             int sensor2 = Int32.Parse(splitted[1]);
-            Debug.LogError(sensor1+","+sensor2);
+            //Debug.LogError(sensor1+","+sensor2);
             
             /*
             float newX = startPosition.x+outputInt/100f;
