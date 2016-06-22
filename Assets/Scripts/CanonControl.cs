@@ -11,7 +11,7 @@ public class CanonControl : MonoBehaviour {
 
     public float smooth = 2.0f;
 	float convertAngles = maxDegreeValue/maxSensorValue;
-	float convertMovuino = 1f;
+	float maxMovuinoValue = 1f;
 
 	const float maxSensorValue = 1024f;
 	const float maxDegreeValue = 360f;
@@ -142,12 +142,6 @@ public class CanonControl : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        
-		// X horizontal angle
-		float newXAngle = horizontalSlider.value * maxDegreeValue/2;
-
-		// Y vertical angle
-		float newYAngle = (verticalSlider.value + .5f) * maxDegreeValue;
 
 		//if((useArduino || useMovuino) && isPortOK && isPortOpen)
 		if(isPortOpen)
@@ -158,46 +152,55 @@ public class CanonControl : MonoBehaviour {
 			{
 
 				string[] splitted = arduinoString.Split(' ');
-
-				if(useArduino)
+				try
 				{
-					int sensor1 = Int32.Parse(splitted[0]);
-					int sensor2 = Int32.Parse(splitted[1]);
+					if(useArduino && (2 == splitted.Length))
+					{
+						int sensor1 = Int32.Parse(splitted[0]);
+						int sensor2 = Int32.Parse(splitted[1]);
 
-					horizontalSlider.value = sensor2/maxSensorValue;
-					verticalSlider.value = sensor1/maxSensorValue;
-
-					newXAngle = -sensor1*convertAngles;
-					newYAngle = -sensor2*convertAngles;
-				}
-				else if(useMovuino) // defensive coding
-				{
-					char dataType = Char.Parse(splitted[4]);
-					float x = 0f,y = 0f,z = 0f;
-
-					switch(dataType) {
-					case 'p': // 1 float
-						break;
-					case 'a': // 3 floats
-						break;
-					case 'm': // 3 floats
-						break;
-					case 'g': // 3 floats
-						x = float.Parse(splitted[4]);
-						y = float.Parse(splitted[5]);
-						z = float.Parse(splitted[6]);
-						break;
-					default:
-						break;
+						horizontalSlider.value = sensor2/maxSensorValue;
+						verticalSlider.value = sensor1/maxSensorValue;
 					}
+					else if(useMovuino && (7 == splitted.Length || 5 == splitted.Length)) // defensive coding
+					{
+						char dataType = Char.Parse(splitted[4]);
+						float x = 0f,y = 0f,z = 0f;
 
-					Debug.Log("gyroscopic angles: xyz="+x+","+y+","+z);
+						switch(dataType) {
+						case 'p': // 1 float
+							break;
+						case 'a': // 3 floats
+							break;
+						case 'm': // 3 floats
+							break;
+						case 'g': // 3 floats
+							x = float.Parse(splitted[4]);
+							y = float.Parse(splitted[5]);
+							z = float.Parse(splitted[6]);
+							break;
+						default:
+							break;
+						}
 
-					newXAngle = -x*convertMovuino;
-					newYAngle = -y*convertMovuino;
+						Debug.Log("gyroscopic angles: xyz="+x+","+y+","+z);
+
+						horizontalSlider.value = y/maxMovuinoValue;
+						verticalSlider.value = x/maxMovuinoValue;
+					}
+				}
+				catch (Exception e)
+				{
+					Debug.LogError("Could not parse '"+arduinoString+"': "+e);
 				}
 			}
 		}
+        
+		// X vertical angle
+		float newXAngle = (1-verticalSlider.value) * maxDegreeValue/2;
+
+		// Y horizontal angle
+		float newYAngle = (horizontalSlider.value - 0.5f) * maxDegreeValue/2;
 
 		Quaternion target = Quaternion.Euler(newXAngle, newYAngle, 0f);
 		transform.rotation = Quaternion.Slerp(transform.rotation, target, Time.deltaTime * smooth);
