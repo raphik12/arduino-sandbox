@@ -3,7 +3,7 @@ using System.Collections;
 using System.IO.Ports;
 using System;
 
-public class CanonControl : MonoBehaviour {
+public class CanonControlArduino : MonoBehaviour {
 
     SerialPort stream;
     Vector3 startPosition;
@@ -21,7 +21,7 @@ public class CanonControl : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	   Debug.LogError("coucou Ke20");
+	   Debug.LogError("Start");
        startPosition = transform.position;
        //startRotation = transform.rotation;
 	}
@@ -60,11 +60,11 @@ public class CanonControl : MonoBehaviour {
         stream.ReadTimeout = timeout;        
         try {
             readLine = stream.ReadLine();
-            stream.DiscardInBuffer();
+            //stream.DiscardInBuffer();
             return readLine;
         }
         catch (Exception e) {
-            stream.DiscardInBuffer();
+            //stream.DiscardInBuffer();
             return null;
         }
         

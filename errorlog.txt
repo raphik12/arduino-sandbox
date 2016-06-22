@@ -4,3 +4,43 @@
 12:58:06 Copie C:\GitHub\ArduinoProject\Temp\UnityLockfile : Le chemin d’accès spécifié est introuvable
 12:58:07 Copie C:\GitHub\ArduinoProject\Temp\UnityLockfile : Le chemin d’accès spécifié est introuvable
 12:58:07 Copie C:\GitHub\ArduinoProject\Temp\UnityLockfile : Le chemin d’accès spécifié est introuvable
+*** 22/06/2016: Copie de C:\GitHub\ArduinoProject\ vers C:\GitHub\arduino-sandbox\ ***
+16:54:24 Copie C:\GitHub\ArduinoProject\Temp\UnityLockfile : Le processus ne peut pas accéder au fichier car ce fichier est utilisé par un autre processus
+16:54:39 Copie C:\GitHub\ArduinoProject\Temp\UnityLockfile : Le chemin d’accès spécifié est introuvable
+16:54:41 Copie C:\GitHub\ArduinoProject\Temp\UnityLockfile : Le chemin d’accès spécifié est introuvable
+16:54:41 Copie C:\GitHub\ArduinoProject\Temp\UnityLockfile : Le chemin d’accès spécifié est introuvable
+16:54:43 Copie C:\GitHub\ArduinoProject\Temp\UnityTempFile-025e25f19d4104e40a8400e90e59d735 : Le chemin d’accès spécifié est introuvable
+16:54:46 Copie C:\GitHub\ArduinoProject\Temp\UnityTempFile-0521361f199c4c54f9bf028d853e20a0 : Le chemin d’accès spécifié est introuvable
+16:54:46 Copie C:\GitHub\ArduinoProject\Temp\UnityTempFile-0e660188d1563a04db539c5d6a71f229 : Le chemin d’accès spécifié est introuvable
+16:54:46 Copie C:\GitHub\ArduinoProject\Temp\UnityTempFile-0ed7d187c6dbe5f448a1fdaedfea7df5 : Le chemin d’accès spécifié est introuvable
+16:54:46 Copie C:\GitHub\ArduinoProject\Temp\UnityTempFile-1b9a9322448fddc438e965e7a405b3a6 : Le chemin d’accès spécifié est introuvable
+16:54:46 Copie C:\GitHub\ArduinoProject\Temp\UnityTempFile-37c95cc830033b7438a6ec1f0a5a8273 : Le chemin d’accès spécifié est introuvable
+16:54:46 Copie C:\GitHub\ArduinoProject\Temp\UnityTempFile-37e9e42bd2c794042a29012ab8b0be35 : Le chemin d’accès spécifié est introuvable
+16:54:46 Copie C:\GitHub\ArduinoProject\Temp\UnityTempFile-40eb892e61b052e47811efc75598fefc : Le chemin d’accès spécifié est introuvable
+16:54:46 Copie C:\GitHub\ArduinoProject\Temp\UnityTempFile-4519fc483c0078d4b9f0eeadb670e767 : Le chemin d’accès spécifié est introuvable
+16:54:46 Copie C:\GitHub\ArduinoProject\Temp\UnityTempFile-4924cdd7cc14b8a40ba52c1fb194a51e : Le chemin d’accès spécifié est introuvable
+16:54:46 Copie C:\GitHub\ArduinoProject\Temp\UnityTempFile-4a713957771bc294ebfc21e9be40bb5f : Le chemin d’accès spécifié est introuvable
+16:54:46 Copie C:\GitHub\ArduinoProject\Temp\UnityTempFile-55a2cbe17e9655b4cb01fb33b37c8620 : Le chemin d’accès spécifié est introuvable
+16:54:46 Copie C:\GitHub\ArduinoProject\Temp\UnityTempFile-59131f1254a6b2b4da83895d0476fba1 : Le chemin d’accès spécifié est introuvable
+16:54:46 Copie C:\GitHub\ArduinoProject\Temp\UnityTempFile-61576c57c1d86c145b9f986ab60353eb : Le chemin d’accès spécifié est introuvable
+16:54:46 Copie C:\GitHub\ArduinoProject\Temp\UnityTempFile-639d4736ee7407d4285deed87226ffa7 : Le chemin d’accès spécifié est introuvable
+16:54:46 Copie C:\GitHub\ArduinoProject\Temp\UnityTempFile-69071cb506ff4444b928054913131a45 : Le chemin d’accès spécifié est introuvable
+16:54:46 Copie C:\GitHub\ArduinoProject\Temp\UnityTempFile-6e37cf51642ae0244afd5178ca42c915 : Le chemin d’accès spécifié est introuvable
+16:54:46 Copie C:\GitHub\ArduinoProject\Temp\UnityTempFile-837bbed1b3835d449b38c5801f4dcd70 : Le chemin d’accès spécifié est introuvable
+16:54:46 Copie C:\GitHub\ArduinoProject\Temp\UnityTempFile-915aa221d5ed5bb42adba1884cbbebb6 : Le chemin d’accès spécifié est introuvable
+16:54:46 Copie C:\GitHub\ArduinoProject\Temp\UnityTempFile-a41190b3787f0ac41b493ae200b2f14b : Le chemin d’accès spécifié est introuvable
+16:54:46 Copie C:\GitHub\ArduinoProject\Temp\UnityTempFile-a7e0b1912eafd3a46af06d0017af40b9 : Le chemin d’accès spécifié est introuvable
+16:54:46 Copie C:\GitHub\ArduinoProject\Temp\UnityTempFile-ab3578d62411e3549b7bf4f099c99b94 : Le chemin d’accès spécifié est introuvable
+16:54:46 Copie C:\GitHub\ArduinoProject\Temp\UnityTempFile-ace40030bbd546d41a9fb22dd1b1b1ac : Le chemin d’accès spécifié est introuvable
+16:54:46 Copie C:\GitHub\ArduinoProject\Temp\UnityTempFile-b40cf5920fd42424f9d5f4161b4214bb : Le chemin d’accès spécifié est introuvable
+16:54:46 Copie C:\GitHub\ArduinoProject\Temp\UnityTempFile-bd73cbae7c42c5949950cf04411d5817 : Le chemin d’accès spécifié est introuvable
+16:54:46 Copie C:\GitHub\ArduinoProject\Temp\UnityTempFile-c2361a596fddc2146a756ed002da5cfd : Le chemin d’accès spécifié est introuvable
+16:54:46 Copie C:\GitHub\ArduinoProject\Temp\UnityTempFile-c743ab56965ead840a718cc4515089dc : Le chemin d’accès spécifié est introuvable
+16:54:46 Copie C:\GitHub\ArduinoProject\Temp\UnityTempFile-cdd47b5333e2c2540905f30821d5cadb : Le chemin d’accès spécifié est introuvable
+16:54:46 Copie C:\GitHub\ArduinoProject\Temp\UnityTempFile-e90aa51dc68c6b34cadc2779ea1cdefd : Le chemin d’accès spécifié est introuvable
+16:54:46 Copie C:\GitHub\ArduinoProject\Temp\UnityTempFile-f484042a6486a1641970c42f896cbb7b : Le chemin d’accès spécifié est introuvable
+16:54:46 Copie C:\GitHub\ArduinoProject\Temp\UnityTempFile-fdce9c97aa45cc54f8b707bf10c3cb8b : Le chemin d’accès spécifié est introuvable
+16:54:46 Màj attributs C:\GitHub\arduino-sandbox\Temp\__Backupscenes\ : Le chemin d’accès spécifié est introuvable
+16:54:46 Copie C:\GitHub\ArduinoProject\Temp\__Backupscenes\0.backup : Le chemin d’accès spécifié est introuvable
+16:54:47 Màj attributs C:\GitHub\arduino-sandbox\Temp\bin\ : Le chemin d’accès spécifié est introuvable
+16:54:47 Màj attributs C:\GitHub\arduino-sandbox\Temp\bin\Debug\ : Le chemin d’accès spécifié est introuvable
