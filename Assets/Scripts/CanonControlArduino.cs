@@ -82,9 +82,11 @@ public class CanonControlArduino : MonoBehaviour {
         stream.ReadTimeout = timeout;        
         try {
             readLine = stream.ReadLine();
+			stream.DiscardInBuffer();
             return readLine;
         }
         catch (Exception e) {
+			stream.DiscardInBuffer();
             return null;
         }
         

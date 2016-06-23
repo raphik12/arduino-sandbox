@@ -22,10 +22,11 @@ public class CanonControl : MonoBehaviour {
 	public Slider verticalSlider;
 	public Toggle connectionToggle;
 	public Dropdown hardwareDropdown;
+	public Button testButton;
 
     // mac /dev/cu.usbmodem1421
     // pc COM
-    public string port;
+    string port;
 
 	private bool _isPortOpen = false;
 	bool isPortOpen {
@@ -49,6 +50,8 @@ public class CanonControl : MonoBehaviour {
 
 	void openPort()
 	{
+		setPort();
+
 		stream = new SerialPort(port, 9600);
 		stream.ReadTimeout = 50;
 
@@ -72,6 +75,7 @@ public class CanonControl : MonoBehaviour {
 		{
 			if(useMovuino)
 				stream.WriteLine("L");
+			stream.DiscardInBuffer();
 			stream.Close();
 			isPortOK = true;
 		}
@@ -112,6 +116,35 @@ public class CanonControl : MonoBehaviour {
 		}
 	}
 
+	void test()
+	{
+		string[] ports = SerialPort.GetPortNames();
+		string testString = "found ports:";
+		foreach(string detectedPort in ports)
+		{
+			testString += (" "+detectedPort);
+		}
+
+		Debug.Log(testString);
+	}
+
+	bool setPort()
+	{
+		string previousPort = port;
+		string[] ports = SerialPort.GetPortNames();
+		if(1 != ports.Length)
+		{
+			Debug.LogError("could not change port from "+previousPort+": "+ports.Length+" ports found (expected 1)");
+			return false;
+		}
+		else
+		{
+			port = ports[0];
+			Debug.Log("port set to "+port+", was "+previousPort);
+			return true;
+		}
+	}
+
     void Awake()
     { 
 		Debug.Log("Awake");
@@ -132,12 +165,17 @@ public class CanonControl : MonoBehaviour {
 		connectionToggle.onValueChanged.AddListener(delegate {
 			pressConnection();
 		});
+
+		testButton.onClick.AddListener(delegate {
+			test();
+		});
 	}
 
 	void Destroy()
 	{
 		hardwareDropdown.onValueChanged.RemoveAllListeners();
 		connectionToggle.onValueChanged.RemoveAllListeners();
+		testButton.onClick.RemoveAllListeners();
 	}
 	
 	// Update is called once per frame
@@ -211,9 +249,11 @@ public class CanonControl : MonoBehaviour {
         stream.ReadTimeout = timeout;        
         try {
             readLine = stream.ReadLine();
+			stream.DiscardInBuffer();
             return readLine;
         }
         catch (Exception e) {
+			stream.DiscardInBuffer();
             return null;
         }
         
