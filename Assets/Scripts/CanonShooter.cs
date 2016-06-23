@@ -10,6 +10,8 @@ public class CanonShooter : MonoBehaviour {
     
     public float canonBallSpeed = 50f;
 
+	public KeyCode key;
+
 	// Use this for initialization
 	void Start () {
 	   //InvokeRepeating("shoot", 0f, 1F);
@@ -17,7 +19,7 @@ public class CanonShooter : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	   if (Input.GetKey("space"))
+		if (Input.GetKey(key))
        {
            shoot();
        }

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO.Ports;
 using System;
 using UnityEngine.UI;
@@ -20,17 +21,21 @@ public class CanonControl : MonoBehaviour {
 	const float maxSensorValue = 1024f;
 	const float maxDegreeValue = 360f;
 
+	bool isLogExtensive = false;
 
 	// interface
 	public Slider horizontalSlider;
 	public Slider verticalSlider;
 	public Toggle connectionToggle;
+	public Toggle logToggle;
 	public Dropdown hardwareDropdown;
+	public Dropdown portDropdown;
 	public Button testButton;
 
     // mac /dev/cu.usbmodem1421
     // pc COM
     string port;
+	string[] ports;
 
 	private bool _isPortOpen = false;
 	bool isPortOpen {
@@ -63,7 +68,10 @@ public class CanonControl : MonoBehaviour {
 		{
 			stream.Open();
 			if(useMovuino)
+			{
+				// TODO FIXME too early
 				stream.WriteLine("l");
+			}
 			isPortOK = true;
 			Debug.Log("port successfully open");
 		}
@@ -76,18 +84,21 @@ public class CanonControl : MonoBehaviour {
 
 	void closePort()
 	{
-		try
+		if(null != stream)
 		{
-			if(useMovuino)
-				stream.WriteLine("L");
-			stream.DiscardInBuffer();
-			stream.Close();
-			isPortOK = true;
-			Debug.Log("port successfully closed");
-		}
-		catch (Exception e) {
-			isPortOK = false;
-			Debug.LogError("Closing the stream failed: "+e);
+			try
+			{
+				if(useMovuino)
+					stream.WriteLine("L");
+				stream.DiscardInBuffer();
+				stream.Close();
+				isPortOK = true;
+				Debug.Log("port successfully closed");
+			}
+			catch (Exception e) {
+				isPortOK = false;
+				Debug.LogError("Closing the stream failed: "+e);
+			}
 		}
 		autoSetPortOpen();
 	}
@@ -100,6 +111,44 @@ public class CanonControl : MonoBehaviour {
 		}
 		useArduino = (1 == hardwareDropdown.value);
 		useMovuino = (2 == hardwareDropdown.value);
+	}
+
+	void setLog()
+	{
+		isLogExtensive = logToggle.isOn;
+	}
+
+	void setPortDropdown()
+	{
+		portDropdown.ClearOptions();
+
+		ports = SerialPort.GetPortNames();
+		if(0 == ports.Length)
+		{
+			Debug.LogError("no port found!");
+		}
+		else
+		{
+			string listOfPorts = "";
+			foreach(string foundPort in ports)
+			{
+				if(!string.IsNullOrEmpty(listOfPorts))
+					listOfPorts += "; ";
+				listOfPorts += foundPort;
+			}
+			Debug.Log("found ports: "+listOfPorts);
+			portDropdown.AddOptions(new List<string>(ports));
+		}
+	}
+
+	void switchPort()
+	{
+		if (isPortOpen)
+		{
+			closePort();
+		}
+
+		port = ports[portDropdown.value];
 	}
 
 	void pressConnection()
@@ -138,24 +187,27 @@ public class CanonControl : MonoBehaviour {
 		Debug.Log(testString);
 		*/
 
-		if(previousWasCapL)
+		if(null != stream)
 		{
-			stream.WriteLine("l");
-			Debug.LogError("wrote l");
+			if(previousWasCapL)
+			{
+				stream.WriteLine("l");
+				Debug.LogError("wrote l");
+			}
+			else
+			{
+				stream.WriteLine("L");
+				Debug.LogError("wrote L");
+			}
+			previousWasCapL = !previousWasCapL;
 		}
-		else
-		{
-			stream.WriteLine("L");
-			Debug.LogError("wrote L");
-		}
-		previousWasCapL = !previousWasCapL;
 	}
 
 	bool setPort()
 	{
 		string previousPort = port;
 		string[] ports = SerialPort.GetPortNames();
-		if(1 != ports.Length)
+		if(0 == ports.Length)
 		{
 			Debug.LogError("could not change port from "+previousPort+": "+ports.Length+" ports found (expected 1)");
 			return false;
@@ -178,15 +230,25 @@ public class CanonControl : MonoBehaviour {
 	   Debug.Log("Start");
 	
 		autoSetPortOpen();
+		setPortDropdown();
+		setLog();
 
-       startPosition = transform.position;
+		startPosition = transform.position;
 
 		hardwareDropdown.onValueChanged.AddListener(delegate {
 			switchHardware();
 		});
 
+		portDropdown.onValueChanged.AddListener(delegate {
+			switchPort();
+		});
+
 		connectionToggle.onValueChanged.AddListener(delegate {
 			pressConnection();
+		});
+
+		logToggle.onValueChanged.AddListener(delegate {
+			setLog();
 		});
 
 		testButton.onClick.AddListener(delegate {
@@ -197,6 +259,7 @@ public class CanonControl : MonoBehaviour {
 	void Destroy()
 	{
 		hardwareDropdown.onValueChanged.RemoveAllListeners();
+		portDropdown.onValueChanged.RemoveAllListeners();
 		connectionToggle.onValueChanged.RemoveAllListeners();
 		testButton.onClick.RemoveAllListeners();
 	}
@@ -222,7 +285,8 @@ public class CanonControl : MonoBehaviour {
 						horizontalSlider.value = sensor2/maxSensorValue;
 						verticalSlider.value = sensor1/maxSensorValue;
 
-						Debug.LogWarning("arduino ok");
+						if(isLogExtensive)
+							Debug.LogWarning("arduino ok");
 					}
 					else if(useMovuino && (9 == splitted.Length || 7 == splitted.Length)) // defensive coding
 					{
@@ -239,25 +303,29 @@ public class CanonControl : MonoBehaviour {
 							x = Int32.Parse(splitted[6]);
 							y = Int32.Parse(splitted[7]);
 							z = Int32.Parse(splitted[8]);
-							Debug.LogWarning("x = "+x);
+							if(isLogExtensive)
+								Debug.LogWarning("x = "+x);
 							break;
 						default:
-							Debug.LogWarning("unrecognized char '"+dataType+"'");
+							if(isLogExtensive)
+								Debug.LogWarning("unrecognized char '"+dataType+"'");
 							break;
 						}
 
 						//Debug.Log("gyroscopic angles: xyz="+x+","+y+","+z);
 
-						horizontalSlider.value = (y+maxMovuinoValue/2)/maxMovuinoValue;
+						horizontalSlider.value = 1-(z+maxMovuinoValue/2)/maxMovuinoValue;
 						verticalSlider.value = (x+maxMovuinoValue/2)/maxMovuinoValue;;
 
 						//horizontalSlider.value = y/maxSensorValue;
 						//verticalSlider.value = x/maxSensorValue;
-						Debug.LogWarning("movuino ok");
+						if(isLogExtensive)
+							Debug.LogWarning("movuino ok");
 					}
 					else
 					{
-						Debug.LogWarning("length="+splitted.Length+" ; string="+arduinoString);
+						if(isLogExtensive)
+							Debug.LogWarning("length="+splitted.Length+" ; string="+arduinoString);
 					}
 				}
 				catch (Exception e)
@@ -267,12 +335,14 @@ public class CanonControl : MonoBehaviour {
 			}
 			else
 			{
-				Debug.LogWarning("arduinoString == NULL");
+				if(isLogExtensive)
+					Debug.LogWarning("arduinoString == NULL");
 			}
 		}
 		else
 		{
-			Debug.LogWarning("port closed");
+			if(isLogExtensive)
+				Debug.LogWarning("port closed");
 		}
         
 		// X vertical angle
@@ -284,14 +354,18 @@ public class CanonControl : MonoBehaviour {
 		Quaternion target = Quaternion.Euler(newXAngle, newYAngle, 0f);
 		transform.rotation = Quaternion.Slerp(transform.rotation, target, Time.deltaTime * smooth);
 
-		Debug.LogWarning("update ok");
+		if(isLogExtensive)
+			Debug.LogWarning("update ok");
 	}
 
     string readLine;
     public string ReadFromArduino () {
         try {
             readLine = stream.ReadLine();
-			Debug.LogWarning("readline="+readLine);
+
+			if(isLogExtensive)
+				Debug.LogWarning("readline="+readLine);
+			
 			//stream.DiscardInBuffer();
             return readLine;
         }
