@@ -11,7 +11,11 @@ public class CanonControl : MonoBehaviour {
 
     public float smooth = 2.0f;
 	float convertAngles = maxDegreeValue/maxSensorValue;
-	float maxMovuinoValue = 1f;
+	public float maxMovuinoValue;
+
+	float x = 0f;
+	float y = 0f;
+	float z = 0f;
 
 	const float maxSensorValue = 1024f;
 	const float maxDegreeValue = 360f;
@@ -53,7 +57,7 @@ public class CanonControl : MonoBehaviour {
 		setPort();
 
 		stream = new SerialPort(port, 9600);
-		stream.ReadTimeout = 50;
+		stream.ReadTimeout = 100;
 
 		try
 		{
@@ -61,6 +65,7 @@ public class CanonControl : MonoBehaviour {
 			if(useMovuino)
 				stream.WriteLine("l");
 			isPortOK = true;
+			Debug.Log("port successfully open");
 		}
 		catch (Exception e) {
 			isPortOK = false;
@@ -78,6 +83,7 @@ public class CanonControl : MonoBehaviour {
 			stream.DiscardInBuffer();
 			stream.Close();
 			isPortOK = true;
+			Debug.Log("port successfully closed");
 		}
 		catch (Exception e) {
 			isPortOK = false;
@@ -116,8 +122,12 @@ public class CanonControl : MonoBehaviour {
 		}
 	}
 
+
+	bool previousWasCapL = false;
+
 	void test()
 	{
+		/*
 		string[] ports = SerialPort.GetPortNames();
 		string testString = "found ports:";
 		foreach(string detectedPort in ports)
@@ -126,6 +136,19 @@ public class CanonControl : MonoBehaviour {
 		}
 
 		Debug.Log(testString);
+		*/
+
+		if(previousWasCapL)
+		{
+			stream.WriteLine("l");
+			Debug.LogError("wrote l");
+		}
+		else
+		{
+			stream.WriteLine("L");
+			Debug.LogError("wrote L");
+		}
+		previousWasCapL = !previousWasCapL;
 	}
 
 	bool setPort()
@@ -180,11 +203,10 @@ public class CanonControl : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
-		//if((useArduino || useMovuino) && isPortOK && isPortOpen)
+		
 		if(isPortOpen)
 		{
-			string arduinoString = ReadFromArduino(100);
+			string arduinoString = ReadFromArduino();
             
 			if(!string.IsNullOrEmpty(arduinoString))
 			{
@@ -199,11 +221,12 @@ public class CanonControl : MonoBehaviour {
 
 						horizontalSlider.value = sensor2/maxSensorValue;
 						verticalSlider.value = sensor1/maxSensorValue;
+
+						Debug.LogWarning("arduino ok");
 					}
-					else if(useMovuino && (7 == splitted.Length || 5 == splitted.Length)) // defensive coding
+					else if(useMovuino && (9 == splitted.Length || 7 == splitted.Length)) // defensive coding
 					{
 						char dataType = Char.Parse(splitted[4]);
-						float x = 0f,y = 0f,z = 0f;
 
 						switch(dataType) {
 						case 'p': // 1 float
@@ -213,18 +236,28 @@ public class CanonControl : MonoBehaviour {
 						case 'm': // 3 floats
 							break;
 						case 'g': // 3 floats
-							x = float.Parse(splitted[4]);
-							y = float.Parse(splitted[5]);
-							z = float.Parse(splitted[6]);
+							x = Int32.Parse(splitted[6]);
+							y = Int32.Parse(splitted[7]);
+							z = Int32.Parse(splitted[8]);
+							Debug.LogWarning("x = "+x);
 							break;
 						default:
+							Debug.LogWarning("unrecognized char '"+dataType+"'");
 							break;
 						}
 
-						Debug.Log("gyroscopic angles: xyz="+x+","+y+","+z);
+						//Debug.Log("gyroscopic angles: xyz="+x+","+y+","+z);
 
-						horizontalSlider.value = y/maxMovuinoValue;
-						verticalSlider.value = x/maxMovuinoValue;
+						horizontalSlider.value = (y+maxMovuinoValue/2)/maxMovuinoValue;
+						verticalSlider.value = (x+maxMovuinoValue/2)/maxMovuinoValue;;
+
+						//horizontalSlider.value = y/maxSensorValue;
+						//verticalSlider.value = x/maxSensorValue;
+						Debug.LogWarning("movuino ok");
+					}
+					else
+					{
+						Debug.LogWarning("length="+splitted.Length+" ; string="+arduinoString);
 					}
 				}
 				catch (Exception e)
@@ -232,6 +265,14 @@ public class CanonControl : MonoBehaviour {
 					Debug.LogError("Could not parse '"+arduinoString+"': "+e);
 				}
 			}
+			else
+			{
+				Debug.LogWarning("arduinoString == NULL");
+			}
+		}
+		else
+		{
+			Debug.LogWarning("port closed");
 		}
         
 		// X vertical angle
@@ -242,18 +283,20 @@ public class CanonControl : MonoBehaviour {
 
 		Quaternion target = Quaternion.Euler(newXAngle, newYAngle, 0f);
 		transform.rotation = Quaternion.Slerp(transform.rotation, target, Time.deltaTime * smooth);
+
+		Debug.LogWarning("update ok");
 	}
 
     string readLine;
-    public string ReadFromArduino (int timeout = 0) {
-        stream.ReadTimeout = timeout;        
+    public string ReadFromArduino () {
         try {
             readLine = stream.ReadLine();
-			stream.DiscardInBuffer();
+			Debug.LogWarning("readline="+readLine);
+			//stream.DiscardInBuffer();
             return readLine;
         }
         catch (Exception e) {
-			stream.DiscardInBuffer();
+			//stream.DiscardInBuffer();
             return null;
         }
         
@@ -266,7 +309,7 @@ public class CanonControl : MonoBehaviour {
 	{
 		stream.WriteLine("?");
 		//stream.BaseStream.Flush();
-		string read = ReadFromArduino(100);
+		string read = ReadFromArduino();
 		Debug.LogError(read);
 	}
 
@@ -279,10 +322,10 @@ public class CanonControl : MonoBehaviour {
 		stream.WriteLine("l");
 		stream.BaseStream.Flush();
 
-		string read = ReadFromArduino(100);
-		string read2 = ReadFromArduino(100);
-		string read3 = ReadFromArduino(100);
-		string read4 = ReadFromArduino(100);
+		string read = ReadFromArduino();
+		string read2 = ReadFromArduino();
+		string read3 = ReadFromArduino();
+		string read4 = ReadFromArduino();
 
 		Debug.LogError(read);
 		Debug.LogError(read2);
