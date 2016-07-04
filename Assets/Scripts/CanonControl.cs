@@ -14,9 +14,43 @@ public class CanonControl : MonoBehaviour {
 	float convertAngles = maxDegreeValue/maxSensorValue;
 	public float maxMovuinoValue;
 
-	float x = 0f;
-	float y = 0f;
-	float z = 0f;
+	private float _x = 0f, _y = 0f, _z = 0f;
+	public float x {
+		get {
+			return _x;
+		}
+		set {
+			_x = value;
+			if(null != xText)
+			{
+				xText.text = value.ToString();
+			}
+		}
+	}
+	public float y {
+		get {
+			return _y;
+		}
+		set {
+			_y = value;
+			if(null != yText)
+			{
+				yText.text = value.ToString();
+			}
+		}
+	}
+	public float z {
+		get {
+			return _z;
+		}
+		set {
+			_z = value;
+			if(null != zText)
+			{
+				zText.text = value.ToString();
+			}
+		}
+	}
 
 	const float maxSensorValue = 1024f;
 	const float maxDegreeValue = 360f;
@@ -31,6 +65,10 @@ public class CanonControl : MonoBehaviour {
 	public Dropdown hardwareDropdown;
 	public Dropdown portDropdown;
 	public Button testButton;
+
+	public Text xText;
+	public Text yText;
+	public Text zText;
 
     // mac /dev/cu.usbmodem1421
     // pc COM
@@ -229,6 +267,10 @@ public class CanonControl : MonoBehaviour {
 	void Start () {
 	   Debug.Log("Start");
 	
+		x = 0;
+		y = 0;
+		z = 0;
+
 		autoSetPortOpen();
 		setPortDropdown();
 		setLog();
@@ -300,27 +342,15 @@ public class CanonControl : MonoBehaviour {
 							
 							// movuino - joystick mode
 
-							x = -Int32.Parse(splitted[8]);
-							y = Int32.Parse(splitted[7]);
-							z = Int32.Parse(splitted[6]);
-							if(isLogExtensive)
-								Debug.LogWarning("x = "+x);
-
-							horizontalSlider.value = 1-(z+maxMovuinoValue/2)/maxMovuinoValue;
-							verticalSlider.value = (x+maxMovuinoValue/2)/maxMovuinoValue;
-                            
-
-							// movuino - cannon mode
-							/*
 							x = Int32.Parse(splitted[8]);
 							y = Int32.Parse(splitted[7]);
 							z = Int32.Parse(splitted[6]);
 							if(isLogExtensive)
 								Debug.LogWarning("x = "+x);
 
-							horizontalSlider.value = ((-z+y)/2+maxMovuinoValue/2)/maxMovuinoValue;
-							verticalSlider.value = (-x+3*maxMovuinoValue/4)/maxMovuinoValue;
-                            */
+							horizontalSlider.value = 1-(z+maxMovuinoValue/2)/maxMovuinoValue;
+							verticalSlider.value = (-x+maxMovuinoValue/2)/maxMovuinoValue;
+
 							break;
 						case 'm': // 3 floats
 							break;
