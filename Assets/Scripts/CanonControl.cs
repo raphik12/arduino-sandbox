@@ -274,7 +274,8 @@ public class CanonControl : MonoBehaviour {
 			if(!string.IsNullOrEmpty(arduinoString))
 			{
 
-				string[] splitted = arduinoString.Split(' ');
+				string[] splittedLines = arduinoString.Split('\n');
+				string[] splitted = splittedLines[0].Split(' ');
 				try
 				{
 					if(useArduino && (2 == splitted.Length))
@@ -296,15 +297,34 @@ public class CanonControl : MonoBehaviour {
 						case 'p': // 1 float
 							break;
 						case 'a': // 3 floats
+							
+							// movuino - joystick mode
+
+							x = -Int32.Parse(splitted[8]);
+							y = Int32.Parse(splitted[7]);
+							z = Int32.Parse(splitted[6]);
+							if(isLogExtensive)
+								Debug.LogWarning("x = "+x);
+
+							horizontalSlider.value = 1-(z+maxMovuinoValue/2)/maxMovuinoValue;
+							verticalSlider.value = (x+maxMovuinoValue/2)/maxMovuinoValue;
+                            
+
+							// movuino - cannon mode
+							/*
+							x = Int32.Parse(splitted[8]);
+							y = Int32.Parse(splitted[7]);
+							z = Int32.Parse(splitted[6]);
+							if(isLogExtensive)
+								Debug.LogWarning("x = "+x);
+
+							horizontalSlider.value = ((-z+y)/2+maxMovuinoValue/2)/maxMovuinoValue;
+							verticalSlider.value = (-x+3*maxMovuinoValue/4)/maxMovuinoValue;
+                            */
 							break;
 						case 'm': // 3 floats
 							break;
 						case 'g': // 3 floats
-							x = Int32.Parse(splitted[6]);
-							y = Int32.Parse(splitted[7]);
-							z = Int32.Parse(splitted[8]);
-							if(isLogExtensive)
-								Debug.LogWarning("x = "+x);
 							break;
 						default:
 							if(isLogExtensive)
@@ -313,9 +333,6 @@ public class CanonControl : MonoBehaviour {
 						}
 
 						//Debug.Log("gyroscopic angles: xyz="+x+","+y+","+z);
-
-						horizontalSlider.value = 1-(z+maxMovuinoValue/2)/maxMovuinoValue;
-						verticalSlider.value = (x+maxMovuinoValue/2)/maxMovuinoValue;;
 
 						//horizontalSlider.value = y/maxSensorValue;
 						//verticalSlider.value = x/maxSensorValue;
